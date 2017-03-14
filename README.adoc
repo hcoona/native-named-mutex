@@ -1,0 +1,3 @@
+= native-named-mutex =
+
+This is a Java library to provide a cross-platform system-wide named mutex synchronization primitive. It could be used for inter-process synchronization.
