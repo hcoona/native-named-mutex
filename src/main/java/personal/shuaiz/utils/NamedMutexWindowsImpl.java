@@ -43,8 +43,6 @@ class NamedMutexWindowsImpl extends NamedMutex {
    */
   @VisibleForTesting
   NamedMutexWindowsImpl(boolean initiallyOwned, String name) throws Win32Exception {
-    super(initiallyOwned, name);
-
     Preconditions.checkArgument(!Strings.isNullOrEmpty(name), "name cannot be null or empty");
 
     handle = Kernel32Ext.INSTANCE.CreateMutex(null, initiallyOwned, name);

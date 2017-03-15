@@ -52,18 +52,6 @@ public abstract class NamedMutex implements AutoCloseable {
   }
 
   /**
-   * This constructor initializes a Mutex object that represents a named system mutex.
-   * You can create multiple Mutex objects that represent the same named system mutex.
-   *
-   * @param initiallyOwned
-   *     indicates whether the calling thread should have initial ownership of the mutex
-   * @param name
-   *     the name of the mutex
-   */
-  public NamedMutex(boolean initiallyOwned, String name) {
-  }
-
-  /**
    * Blocks the current thread until the current mutex receives a signal.
    *
    * @return true if the current instance receives a signal. If the current instance is never
@@ -84,7 +72,7 @@ public abstract class NamedMutex implements AutoCloseable {
   public abstract boolean waitOne(long interval, TimeUnit intervalTimeUnit) throws Exception;
 
   /**
-   * Release the Mutex object onec.
+   * Release the Mutex object once.
    */
   public abstract void release() throws Exception;
 
