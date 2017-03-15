@@ -1,6 +1,11 @@
 package personal.shuaiz.utils;
 
+import com.sun.jna.Platform;
+import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecutor;
 import org.junit.Assert;
+import org.junit.Assume;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.concurrent.ExecutorService;
@@ -9,36 +14,37 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 public class NamedMutexWindowsImplTest {
+
+  @BeforeClass
+  public static void beforeClass() throws Exception {
+    Assume.assumeTrue(Platform.isWindows());
+  }
+
   @Test
-  public void testCannotWaitOne() throws Exception {
-    final String name = "test_mutex1";
-    try (NamedMutex mutex_owned = new NamedMutexWindowsImpl(true, name)) {
-      ExecutorService executor = Executors.newSingleThreadExecutor();
-
-      Future<Boolean> waitOneFuture = executor.submit(() -> {
-        try (NamedMutex mutex2 = new NamedMutexWindowsImpl(true, name)) {
-          return mutex2.waitOne(500, TimeUnit.MILLISECONDS);
-        }
-      });
-
-      Assert.assertFalse(waitOneFuture.get());
+  public void testNewInstance() throws Exception {
+    try (NamedMutex mutex = NamedMutex.newInstance("test_named-mutex_new-instance")) {
+      Assert.assertTrue(mutex instanceof NamedMutexWindowsImpl);
     }
   }
 
   @Test
-  public void testCanWaitOne() throws Exception {
-    final String name = "test_mutex1";
-    try (NamedMutex mutex_owned = new NamedMutexWindowsImpl(true, name)) {
-      mutex_owned.release();
-      ExecutorService executor = Executors.newSingleThreadExecutor();
+  public void testInterop() throws Exception {
+    final String name = "test_named-mutex_interop";
+    final int powershellWaitSeconds = 5;
+    CommandLine commandLine = CommandLine.parse(
+        "PowerShell.exe -Command \"[System.Threading.Mutex]::new($True, \'" + name + "\'); " +
+        "Start-Sleep -Seconds " + powershellWaitSeconds + "\"");
+    DefaultExecutor cmdExecutor = new DefaultExecutor();
 
-      Future<Boolean> waitOneFuture = executor.submit(() -> {
-        try (NamedMutex mutex2 = new NamedMutexWindowsImpl(true, name)) {
-          return mutex2.waitOne(5, TimeUnit.SECONDS);
-        }
-      });
+    ExecutorService executor = Executors.newSingleThreadExecutor();
+    Future<Integer> powershellMutexFuture = executor.submit(() -> cmdExecutor.execute(commandLine));
 
-      Assert.assertTrue(waitOneFuture.get());
+    Thread.sleep(TimeUnit.SECONDS.toMillis(powershellWaitSeconds) / 2);
+    try (NamedMutex mutex = NamedMutex.newInstance(name)) {
+      Assert.assertFalse(mutex.waitOne(500, TimeUnit.MILLISECONDS));
     }
+
+    Assert.assertEquals(0, powershellMutexFuture.get().intValue());
   }
+
 }
