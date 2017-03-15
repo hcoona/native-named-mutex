@@ -33,7 +33,8 @@ public abstract class NamedMutex implements AutoCloseable {
    * Create a platform specified implementation of NamedMutex.
    *
    * @param initiallyOwned
-   *     indicates whether the calling thread should have initial ownership of the mutex
+   *     indicates whether the calling thread should have initial ownership of the mutex.
+   *     If the mutex is already exist, this parameter is ignored.
    * @param name
    *     the name of the mutex
    * @return A platform specified implementation of NamedMutex
