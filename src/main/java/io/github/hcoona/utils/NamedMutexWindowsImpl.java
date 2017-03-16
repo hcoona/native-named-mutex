@@ -1,4 +1,4 @@
-package personal.shuaiz.utils;
+package io.github.hcoona.utils;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;

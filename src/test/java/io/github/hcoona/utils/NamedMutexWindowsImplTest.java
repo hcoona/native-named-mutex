@@ -1,4 +1,4 @@
-package personal.shuaiz.utils;
+package io.github.hcoona.utils;
 
 import com.sun.jna.Platform;
 import org.apache.commons.exec.CommandLine;

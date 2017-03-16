@@ -1,4 +1,4 @@
-package personal.shuaiz.utils;
+package io.github.hcoona.utils;
 
 import com.sun.jna.Native;
 import com.sun.jna.platform.win32.Kernel32;
