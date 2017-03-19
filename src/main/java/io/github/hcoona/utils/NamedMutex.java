@@ -58,6 +58,8 @@ public abstract class NamedMutex implements AutoCloseable {
    *
    * @return true if the current instance receives a signal. If the current instance is never
    *     signaled, WaitOne never returns.
+   * @throws Exception
+   *     Native errors
    */
   public abstract boolean waitOne() throws Exception;
 
@@ -70,11 +72,15 @@ public abstract class NamedMutex implements AutoCloseable {
    * @param intervalTimeUnit
    *     The time unit of interval
    * @return true if the current instance receives a signal; otherwise, false.
+   * @throws Exception
+   *     Native errors
    */
   public abstract boolean waitOne(long interval, TimeUnit intervalTimeUnit) throws Exception;
 
   /**
    * Release the Mutex object once.
+   * @throws Exception
+   *     Native errors
    */
   public abstract void release() throws Exception;
 
