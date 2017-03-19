@@ -24,7 +24,7 @@
 
   <scm>
     <connection>scm:git:https://github.com/hcoona/native-named-mutex.git</connection>
-    <developerConnection>scm:git:git@github.com:hcoona/native-named-mutex.git</developerConnection>
+    <developerConnection>scm:git:git://github.com/hcoona/native-named-mutex.git</developerConnection>
     <url>https://github.com/hcoona/native-named-mutex/tree/master</url>
   </scm>
 
@@ -76,11 +76,6 @@
           <version>3.6.1</version>
         </plugin>
         <plugin>
-          <groupId>org.sonatype.plugins</groupId>
-          <artifactId>nexus-staging-maven-plugin</artifactId>
-          <version>1.6.8</version>
-        </plugin>
-        <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>findbugs-maven-plugin</artifactId>
           <version>3.0.4</version>
@@ -126,6 +121,8 @@
         <artifactId>maven-checkstyle-plugin</artifactId>
         <configuration>
           <configLocation>google_checks.xml</configLocation>
+          <suppressionsLocation>build/checkstyle-suppressions.xml</suppressionsLocation>
+          <suppressionsFileExpression>checkstyle.suppressions.file</suppressionsFileExpression>
           <encoding>${project.build.sourceEncoding}</encoding>
           <consoleOutput>true</consoleOutput>
           <failsOnError>true</failsOnError>
@@ -151,6 +148,8 @@
         <artifactId>maven-checkstyle-plugin</artifactId>
         <configuration>
           <configLocation>google_checks.xml</configLocation>
+          <suppressionsLocation>build/checkstyle-suppressions.xml</suppressionsLocation>
+          <suppressionsFileExpression>checkstyle.suppressions.file</suppressionsFileExpression>
         </configuration>
       </plugin>
       <plugin>
@@ -179,6 +178,30 @@
         </repository>
       </distributionManagement>
       <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.sonatype.plugins</groupId>
+              <artifactId>nexus-staging-maven-plugin</artifactId>
+              <version>1.6.8</version>
+            </plugin>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-source-plugin</artifactId>
+              <version>2.2.1</version>
+            </plugin>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-javadoc-plugin</artifactId>
+              <version>2.9.1</version>
+            </plugin>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-gpg-plugin</artifactId>
+              <version>1.5</version>
+            </plugin>
+          </plugins>
+        </pluginManagement>
         <plugins>
           <plugin>
             <groupId>org.sonatype.plugins</groupId>
@@ -193,7 +216,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-source-plugin</artifactId>
-            <version>2.2.1</version>
             <executions>
               <execution>
                 <id>attach-sources</id>
@@ -206,7 +228,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>2.9.1</version>
             <executions>
               <execution>
                 <id>attach-javadocs</id>
@@ -219,7 +240,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>1.5</version>
             <executions>
               <execution>
                 <id>sign-artifacts</id>

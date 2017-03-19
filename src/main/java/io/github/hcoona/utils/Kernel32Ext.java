@@ -29,12 +29,12 @@ interface Kernel32Ext extends Kernel32 {
    *     The name of the mutex object. The name is limited to MAX_PATH characters. Name comparison
    *     is case sensitive.
    * @return If the function succeeds, the return value is a handle to the newly created mutex
-   * object. If the function fails, the return value is NULL. To get extended error information,
-   * call {@See GetLastError}. If the mutex is a named mutex and the object existed before this
-   * function call, the return value is a handle to the existing object, GetLastError returns
-   * ERROR_ALREADY_EXISTS, bInitialOwner is ignored, and the calling thread is not granted
-   * ownership. However, if the caller has limited access rights, the function will fail with
-   * ERROR_ACCESS_DENIED and the caller should use the OpenMutex function.
+   *     object. If the function fails, the return value is NULL. To get extended error information,
+   *     call {@See GetLastError}. If the mutex is a named mutex and the object existed before this
+   *     function call, the return value is a handle to the existing object, GetLastError returns
+   *     ERROR_ALREADY_EXISTS, bInitialOwner is ignored, and the calling thread is not granted
+   *     ownership. However, if the caller has limited access rights, the function will fail with
+   *     ERROR_ACCESS_DENIED and the caller should use the OpenMutex function.
    */
   HANDLE CreateMutex(WinBase.SECURITY_ATTRIBUTES lpMutexAttributes,
                      boolean bInitialOwner, String lpName);
@@ -46,7 +46,7 @@ interface Kernel32Ext extends Kernel32 {
    *     A handle to the mutex object. The {@See #CreateMutex} or {@See #OpenMutex} function returns
    *     this handle.
    * @return If the function succeeds, the return value is nonzero. If the function fails, the
-   * return value is zero. To get extended error information, call GetLastError.
+   *     return value is zero. To get extended error information, call GetLastError.
    */
   boolean ReleaseMutex(HANDLE hMutex);
 }

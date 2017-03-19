@@ -56,7 +56,7 @@ public abstract class NamedMutex implements AutoCloseable {
    * Blocks the current thread until the current mutex receives a signal.
    *
    * @return true if the current instance receives a signal. If the current instance is never
-   * signaled, WaitOne never returns.
+   *     signaled, WaitOne never returns.
    */
   public abstract boolean waitOne() throws Exception;
 
@@ -87,7 +87,6 @@ public abstract class NamedMutex implements AutoCloseable {
   public abstract void close() throws Exception;
 
   @Override
-  @SuppressWarnings("checkstyle:nofinalizer")
   protected void finalize() throws Throwable {
     try {
       close();
