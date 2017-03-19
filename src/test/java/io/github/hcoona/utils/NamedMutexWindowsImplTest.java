@@ -30,7 +30,7 @@ public class NamedMutexWindowsImplTest {
   @Test
   public void testInterop() throws Exception {
     final String name = "test_named-mutex_interop";
-    final int powershellWaitSeconds = 5;
+    final int powershellWaitSeconds = 8;
     CommandLine commandLine = CommandLine.parse(
         "PowerShell.exe -Command \"[System.Threading.Mutex]::new($True, \'" + name + "\'); " +
         "Start-Sleep -Seconds " + powershellWaitSeconds + "\"");
