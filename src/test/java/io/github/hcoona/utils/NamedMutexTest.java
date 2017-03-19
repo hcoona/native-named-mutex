@@ -1,6 +1,9 @@
 package io.github.hcoona.utils;
 
+import com.sun.jna.Platform;
 import org.junit.Assert;
+import org.junit.Assume;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.concurrent.ExecutorService;
@@ -9,6 +12,11 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 public class NamedMutexTest {
+
+  @BeforeClass
+  public static void beforeClass() throws Exception {
+    Assume.assumeTrue(Platform.isWindows());
+  }
 
   @Test
   public void testCannotWaitOne() throws Exception {
