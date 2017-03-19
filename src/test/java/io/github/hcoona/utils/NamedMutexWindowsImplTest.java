@@ -8,6 +8,7 @@ import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -33,7 +34,7 @@ public class NamedMutexWindowsImplTest {
     final int powershellWaitSeconds = 8;
     CommandLine commandLine = CommandLine.parse(
         "PowerShell.exe -Command \"[System.Threading.Mutex]::new($True, \'" + name + "\'); " +
-        "Start-Sleep -Seconds " + powershellWaitSeconds + "\"");
+            "Start-Sleep -Seconds " + powershellWaitSeconds + "\"");
     DefaultExecutor cmdExecutor = new DefaultExecutor();
 
     ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -45,6 +46,20 @@ public class NamedMutexWindowsImplTest {
     }
 
     Assert.assertEquals(0, powershellMutexFuture.get().intValue());
+  }
+
+  @Test(expected = AbandonedMutexException.class, timeout = 3000)
+  public void testAbandoned() throws Exception {
+    final String name = "test_named-mutex_abandoned";
+
+    ExecutorService executor = Executors.newSingleThreadExecutor();
+    Future<?> future = executor.submit(() -> NamedMutex.newInstance(true, name));
+    future.get();
+    executor.shutdown();
+
+    try (NamedMutex mutex = NamedMutex.newInstance(name)) {
+      mutex.waitOne();
+    }
   }
 
 }

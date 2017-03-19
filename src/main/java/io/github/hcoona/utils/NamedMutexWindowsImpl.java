@@ -83,7 +83,7 @@ class NamedMutexWindowsImpl extends NamedMutex {
       int returnCode = Kernel32Ext.INSTANCE.WaitForSingleObject(handle, intervalMillis);
 
       if (returnCode == WinBase.WAIT_ABANDONED) {
-        throw new Exception("The mutex abandoned.");
+        throw new AbandonedMutexException();
       }
 
       return returnCode != WinError.WAIT_TIMEOUT;
