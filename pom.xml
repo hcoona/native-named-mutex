@@ -28,6 +28,14 @@
     <url>https://github.com/hcoona/native-named-mutex/tree/master</url>
   </scm>
 
+  <developers>
+    <developer>
+      <name>Shuai Zhang</name>
+      <email>zhangshuai.ustc@gmail.com</email>
+      <timezone>Asia/Hong_Kong</timezone>
+    </developer>
+  </developers>
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
