@@ -1,7 +1,6 @@
 package io.github.hcoona.utils;
 
 import com.sun.jna.Platform;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.concurrent.TimeUnit;
 
@@ -23,9 +22,10 @@ public abstract class NamedMutex implements AutoCloseable {
     if (Platform.isWindows()) {
       return new NamedMutexWindowsImpl(name);
     } else if (Platform.isLinux()) {
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException("Named mutex on Linux is not implemented yet.");
     } else {
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException(
+          "Named mutex on your platform is not implemented yet.");
     }
   }
 
@@ -46,9 +46,10 @@ public abstract class NamedMutex implements AutoCloseable {
     if (Platform.isWindows()) {
       return new NamedMutexWindowsImpl(initiallyOwned, name);
     } else if (Platform.isLinux()) {
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException("Named mutex on Linux is not implemented yet.");
     } else {
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException(
+          "Named mutex on your platform is not implemented yet.");
     }
   }
 
