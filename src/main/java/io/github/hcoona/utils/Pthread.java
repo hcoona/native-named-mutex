@@ -15,17 +15,19 @@ public interface Pthread extends Library {
   int pthread_self();
 
   interface Oflag {
-    int O_CREAT = 0x100;
-    int O_EXCL = 0x200;
-  };
+    int O_CREAT = 0_100;
+    int O_EXCL = 0_200;
+  }
+
+  ;
 
   interface Mode {
-    int S_IRWXU = 00700;
-    int S_IRUSR = 00400;
-    int S_IWUSR = 00200;
-    int S_IXUSR = 00100;
-    int S_IRWXG = 00070;
-    int S_IRGRP = 00040;
+    int S_IRWXU = 0_0700;
+    int S_IRUSR = 0_0400;
+    int S_IWUSR = 0_0200;
+    int S_IXUSR = 0_0100;
+    int S_IRWXG = 0_0070;
+    int S_IRGRP = 0_0040;
   }
 
   Pointer sem_open(String name, int oflag);
@@ -37,16 +39,10 @@ public interface Pthread extends Library {
   int sem_trywait(Pointer sem);
 
   class TimeSpec extends Structure {
-    public static class ByReference extends TimeSpec implements Structure.ByReference {
-      public ByReference(long seconds, long nanoseconds) {
-        super(seconds, nanoseconds);
-      }
-    }
-
     public long tv_sec;
     public long tv_nsec;
 
-    public TimeSpec( long seconds, long nanoseconds ) {
+    public TimeSpec(long seconds, long nanoseconds) {
       this.tv_sec = seconds;
       this.tv_nsec = nanoseconds;
     }
@@ -57,7 +53,13 @@ public interface Pthread extends Library {
     }
   }
 
-  int sem_timedwait(Pointer sem, TimeSpec.ByReference abs_timeout);
+  class TimeSpecByReference extends TimeSpec implements Structure.ByReference {
+    public TimeSpecByReference(long seconds, long nanoseconds) {
+      super(seconds, nanoseconds);
+    }
+  }
+
+  int sem_timedwait(Pointer sem, TimeSpecByReference abs_timeout);
 
   int sem_post(Pointer sem);
 
