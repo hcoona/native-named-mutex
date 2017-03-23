@@ -21,12 +21,12 @@ public class PthreadTest {
     Assert.assertNotEquals(0, Pthread.INSTANCE.pthread_self());
   }
 
-  @Test(timeout=5000)
-  public void testSemaphore() throws Exception {
-    final String name = "/test";
+  @Test(timeout = 5000)
+  public void testSemaphoreBasic() throws Exception {
+    final String name = "/test_semaphore_basic";
 
-    Pointer sem = Pthread.INSTANCE.sem_open(name, Pthread.Oflag.O_CREAT,
-        Pthread.Mode.S_IRWXU | Pthread.Mode.S_IRUSR | Pthread.Mode.S_IWUSR,
+    Pointer sem = Pthread.INSTANCE.sem_open(name, Fcntl.Oflag.O_CREAT,
+        Stat.Mode.S_IRWXU | Stat.Mode.S_IRUSR | Stat.Mode.S_IWUSR,
         0);
     if (sem == null) {
       Assert.fail(LibCExt.INSTANCE.strerror(Native.getLastError()));
@@ -46,6 +46,28 @@ public class PthreadTest {
       Assert.assertEquals(0, Pthread.INSTANCE.sem_close(sem));
       Assert.assertEquals(0, Pthread.INSTANCE.sem_unlink(name));
     }
+  }
+
+  @Test(timeout = 5000)
+  public void testSemaphoreNamed() throws Exception {
+    final String name = "/test_semaphore_basic";
+
+    Pointer sem1 = Pthread.INSTANCE.sem_open(name, Fcntl.Oflag.O_CREAT,
+        Stat.Mode.S_IRWXU | Stat.Mode.S_IRUSR | Stat.Mode.S_IWUSR,
+        0);
+    Assert.assertNotNull(sem1);
+
+    Pointer sem2 = Pthread.INSTANCE.sem_open(name, Fcntl.Oflag.O_CREAT);
+    Assert.assertNotNull(sem2);
+
+    Assert.assertEquals(-1, Pthread.INSTANCE.sem_trywait(sem2));
+    Assert.assertEquals(0, Pthread.INSTANCE.sem_post(sem1));
+    Assert.assertEquals(0, Pthread.INSTANCE.sem_trywait(sem2));
+
+    Assert.assertEquals(0, Pthread.INSTANCE.sem_close(sem1));
+    Assert.assertEquals(0, Pthread.INSTANCE.sem_close(sem2));
+
+    Assert.assertEquals(0, Pthread.INSTANCE.sem_unlink(name));
   }
 
 }

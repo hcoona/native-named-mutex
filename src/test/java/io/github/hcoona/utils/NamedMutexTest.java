@@ -1,9 +1,6 @@
 package io.github.hcoona.utils;
 
-import com.sun.jna.Platform;
 import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.concurrent.ExecutorService;
@@ -13,14 +10,9 @@ import java.util.concurrent.TimeUnit;
 
 public class NamedMutexTest {
 
-  @BeforeClass
-  public static void beforeClass() throws Exception {
-    Assume.assumeTrue(Platform.isWindows());
-  }
-
   @Test
   public void testCannotWaitOne() throws Exception {
-    final String name = "test_named-mutex_cannot-wait-one";
+    final String name = "/test_named-mutex_cannot-wait-one";
     try (NamedMutex ignored = NamedMutex.newInstance(true, name)) {
       ExecutorService executor = Executors.newSingleThreadExecutor();
 
@@ -36,7 +28,7 @@ public class NamedMutexTest {
 
   @Test
   public void testCanWaitOne() throws Exception {
-    final String name = "test_named-mutex_can-wait-one";
+    final String name = "/test_named-mutex_can-wait-one";
     try (NamedMutex mutex_owned = NamedMutex.newInstance(true, name)) {
       mutex_owned.release();
       ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -48,6 +40,8 @@ public class NamedMutexTest {
       });
 
       Assert.assertTrue(waitOneFuture.get());
+    } catch (PosixErrorException e) {
+      System.err.println("Error code = " + e.getErrorCode());
     }
   }
 

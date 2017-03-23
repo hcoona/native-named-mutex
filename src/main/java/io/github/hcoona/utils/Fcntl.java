@@ -3,9 +3,9 @@ package io.github.hcoona.utils;
 import com.google.common.annotations.VisibleForTesting;
 
 @VisibleForTesting
-interface Errno {
-  int ENOENT = 2;
-  int EINTR = 4;
-  int EAGAIN = 11;
-  int ETIMEDOUT = 110;
+interface Fcntl {
+  interface Oflag {
+    int O_CREAT = 0_100;
+    int O_EXCL = 0_200;
+  }
 }

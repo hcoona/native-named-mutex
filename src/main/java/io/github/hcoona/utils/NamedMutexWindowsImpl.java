@@ -25,9 +25,11 @@ class NamedMutexWindowsImpl extends NamedMutex {
    *
    * @param name
    *     the name of the mutex
+   * @throws Win32Exception
+   *     Windows native error
    */
   @VisibleForTesting
-  NamedMutexWindowsImpl(String name) throws Exception {
+  NamedMutexWindowsImpl(String name) throws Win32Exception {
     this(false, name);
   }
 
@@ -62,11 +64,7 @@ class NamedMutexWindowsImpl extends NamedMutex {
 
   @Override
   public boolean waitOne() throws Exception {
-    if (disposed) {
-      throw new InvalidObjectException("The current object is not already been disposed.");
-    } else {
-      return waitOneInternal(WinBase.INFINITE);
-    }
+    return waitOneInternal(WinBase.INFINITE);
   }
 
   @Override
@@ -74,7 +72,8 @@ class NamedMutexWindowsImpl extends NamedMutex {
     return waitOneInternal((int) intervalTimeUnit.toMillis(interval));
   }
 
-  private boolean waitOneInternal(int intervalMillis) throws Exception {
+  private boolean waitOneInternal(int intervalMillis)
+      throws AbandonedMutexException, InvalidObjectException {
     Preconditions.checkArgument(intervalMillis >= -1);
 
     if (disposed) {

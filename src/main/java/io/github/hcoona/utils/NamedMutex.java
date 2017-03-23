@@ -22,7 +22,7 @@ public abstract class NamedMutex implements AutoCloseable {
     if (Platform.isWindows()) {
       return new NamedMutexWindowsImpl(name);
     } else if (Platform.isLinux()) {
-      throw new UnsupportedOperationException("Named mutex on Linux is not implemented yet.");
+      return new NamedMutexPosixImpl(name);
     } else {
       throw new UnsupportedOperationException(
           "Named mutex on your platform is not implemented yet.");
@@ -46,7 +46,7 @@ public abstract class NamedMutex implements AutoCloseable {
     if (Platform.isWindows()) {
       return new NamedMutexWindowsImpl(initiallyOwned, name);
     } else if (Platform.isLinux()) {
-      throw new UnsupportedOperationException("Named mutex on Linux is not implemented yet.");
+      return new NamedMutexPosixImpl(initiallyOwned, name);
     } else {
       throw new UnsupportedOperationException(
           "Named mutex on your platform is not implemented yet.");

@@ -1,6 +1,7 @@
 package io.github.hcoona.utils;
 
 import com.google.common.annotations.VisibleForTesting;
+
 import com.sun.jna.Native;
 import com.sun.jna.platform.unix.LibC;
 

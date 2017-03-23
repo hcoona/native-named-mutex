@@ -114,6 +114,7 @@
           <threshold>Low</threshold>
           <findbugsXmlOutput>true</findbugsXmlOutput>
           <xmlOutput>true</xmlOutput>
+          <excludeFilterFile>build/findbugs-exclude.xml</excludeFilterFile>
         </configuration>
         <executions>
           <execution>
@@ -167,6 +168,7 @@
           <xmlOutput>true</xmlOutput>
           <!-- Optional directory to put findbugs xdoc xml report -->
           <xmlOutputDirectory>target/site</xmlOutputDirectory>
+          <excludeFilterFile>build/findbugs-exclude.xml</excludeFilterFile>
         </configuration>
       </plugin>
     </plugins>

@@ -9,26 +9,10 @@ import com.sun.jna.ptr.IntByReference;
 import java.util.Arrays;
 import java.util.List;
 
-public interface Pthread extends Library {
+interface Pthread extends Library {
   Pthread INSTANCE = Native.loadLibrary("pthread", Pthread.class);
 
   int pthread_self();
-
-  interface Oflag {
-    int O_CREAT = 0_100;
-    int O_EXCL = 0_200;
-  }
-
-  ;
-
-  interface Mode {
-    int S_IRWXU = 0_0700;
-    int S_IRUSR = 0_0400;
-    int S_IWUSR = 0_0200;
-    int S_IXUSR = 0_0100;
-    int S_IRWXG = 0_0070;
-    int S_IRGRP = 0_0040;
-  }
 
   Pointer sem_open(String name, int oflag);
 
