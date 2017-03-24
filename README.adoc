@@ -18,11 +18,13 @@ It underlying use system API to implement Mutex.
 
 * Windows
 * Linux
-* Andriod, macOS and other Posix compatible platforms should be supported but not tested so *not enabled*!
+* Android and other Posix compatible platforms should be supported but not tested so *not enabled*!
+
+Notice that *macOS is NOT supported* because macOS does not implement all posix semaphores API, especially `sem_timedwait`.
 
 == Usage ==
 
-=== Singlton your service in system-wide ===
+=== Singleton your service in system-wide ===
 
 You somehow might have to ensure there is only 1 instance running in your system.
 This is specially useful in enterprise services.
