@@ -20,7 +20,7 @@ class NamedMutexWindowsImpl extends NamedMutex {
 
   /**
    * Calling this constructor overload is the same as calling the
-   * #NamedMutexWindowsImpl(boolean, String) constructor overload and specifying false for
+   * {@link #NamedMutexWindowsImpl(boolean, String)} constructor overload and specifying false for
    * initial ownership of the mutex. That is, the calling thread does not own the mutex.
    *
    * @param name
