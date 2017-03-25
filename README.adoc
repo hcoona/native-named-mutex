@@ -22,6 +22,10 @@ It underlying use system API to implement Mutex.
 
 Notice that *macOS is NOT supported* because macOS does not implement all posix semaphores API, especially `sem_timedwait`.
 
+It is possible to leverage the Posix robust mutex with shared memory for more reliability in the future, so please not asuume it always use semaphore on Linux. (See discussion https://github.com/dotnet/coreclr/issues/3422[here] for more details)
+
+I'm also planning to use Filelock as a final fallback for the platform without full posix mutex support. (BSD?)
+
 == Usage ==
 
 === Singleton your service in system-wide ===
