@@ -5,6 +5,15 @@ image:https://maven-badges.herokuapp.com/maven-central/io.github.hcoona/native-n
 
 This is a Java library to provide a cross-platform system-wide named mutex synchronization primitive. It could be used for inter-process synchronization.
 
+[source,xml]
+-------------------------------------------
+<dependency>
+    <groupId>io.github.hcoona</groupId>
+    <artifactId>native-named-mutex</artifactId>
+    <version>1.2.0-SNAPSHOT</version>
+</dependency>
+-------------------------------------------
+
 == Underlying ==
 
 It underlying use system API to implement Mutex.
@@ -13,18 +22,13 @@ It underlying use system API to implement Mutex.
 *Windows*:: Use https://msdn.microsoft.com/en-us/library/windows/desktop/ms682411(v=vs.85).aspx[CreateMutex] API
             to create or open a named mutex object.
 *Linux*:: Use named semaphore in pthread to simulate a mutex.
+*Other*:: Use Java `FileLock` and `ReentrantLock` to simulate a mutex.
 
-== Supported platform ==
+== Future plan ==
 
-* Windows
-* Linux
-* Android and other Posix compatible platforms should be supported but not tested so *not enabled*!
+Notice that *macOS is supported in Other platform* because macOS does not implement all posix semaphores API, especially `sem_timedwait`.
 
-Notice that *macOS is NOT supported* because macOS does not implement all posix semaphores API, especially `sem_timedwait`.
-
-It is possible to leverage the Posix robust mutex with shared memory for more reliability in the future, so please not asuume it always use semaphore on Linux. (See discussion https://github.com/dotnet/coreclr/issues/3422[here] for more details)
-
-I'm also planning to use Filelock as a final fallback for the platform without full posix mutex support. (BSD?)
+It is possible to leverage the Posix robust mutex with shared memory for more reliability in the future, so please *NOT assume it always use semaphore on Linux*. (See discussion https://github.com/dotnet/coreclr/issues/3422[here] for more details)
 
 == Usage ==
 
