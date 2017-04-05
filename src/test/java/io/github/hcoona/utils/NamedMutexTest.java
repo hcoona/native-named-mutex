@@ -10,14 +10,18 @@ import java.util.concurrent.TimeUnit;
 
 public class NamedMutexTest {
 
-  @Test
+  protected NamedMutex newNamedMutexInstance(boolean initiallyOwned, String name) throws Exception {
+    return NamedMutex.newInstance(initiallyOwned, name);
+  }
+
+  @Test(timeout=2000)
   public void testCannotWaitOne() throws Exception {
     final String name = "/test_named-mutex_cannot-wait-one";
-    try (NamedMutex ignored = NamedMutex.newInstance(true, name)) {
+    try (NamedMutex ignored = newNamedMutexInstance(true, name)) {
       ExecutorService executor = Executors.newSingleThreadExecutor();
 
       Future<Boolean> waitOneFuture = executor.submit(() -> {
-        try (NamedMutex mutex2 = NamedMutex.newInstance(true, name)) {
+        try (NamedMutex mutex2 = newNamedMutexInstance(true, name)) {
           return mutex2.waitOne(500, TimeUnit.MILLISECONDS);
         }
       });
@@ -26,15 +30,15 @@ public class NamedMutexTest {
     }
   }
 
-  @Test
+  @Test(timeout=7000)
   public void testCanWaitOne() throws Exception {
     final String name = "/test_named-mutex_can-wait-one";
-    try (NamedMutex mutex_owned = NamedMutex.newInstance(true, name)) {
+    try (NamedMutex mutex_owned = newNamedMutexInstance(true, name)) {
       mutex_owned.release();
       ExecutorService executor = Executors.newSingleThreadExecutor();
 
       Future<Boolean> waitOneFuture = executor.submit(() -> {
-        try (NamedMutex mutex2 = NamedMutex.newInstance(true, name)) {
+        try (NamedMutex mutex2 = newNamedMutexInstance(true, name)) {
           return mutex2.waitOne(5, TimeUnit.SECONDS);
         }
       });
