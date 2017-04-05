@@ -75,31 +75,26 @@ class NamedMutexWindowsImpl extends NamedMutex {
   private boolean waitOneInternal(int intervalMillis)
       throws AbandonedMutexException, InvalidObjectException {
     Preconditions.checkArgument(intervalMillis >= -1);
+    Preconditions.checkState(!disposed);
 
-    if (disposed) {
-      throw new InvalidObjectException("The current object is not already been disposed.");
-    } else {
-      int returnCode = Kernel32Ext.INSTANCE.WaitForSingleObject(handle, intervalMillis);
+    int returnCode = Kernel32Ext.INSTANCE.WaitForSingleObject(handle, intervalMillis);
 
-      if (returnCode == WinBase.WAIT_ABANDONED) {
-        throw new AbandonedMutexException();
-      }
-
-      return returnCode != WinError.WAIT_TIMEOUT;
+    if (returnCode == WinBase.WAIT_ABANDONED) {
+      throw new AbandonedMutexException();
     }
+
+    return returnCode != WinError.WAIT_TIMEOUT;
   }
 
   @Override
   public void release() throws Exception {
-    if (disposed) {
-      throw new InvalidObjectException("The current object is not already been disposed.");
-    } else {
-      if (owned) {
-        if (Kernel32Ext.INSTANCE.ReleaseMutex(handle)) {
-          owned = false;
-        } else {
-          throw new Win32Exception(Kernel32Ext.INSTANCE.GetLastError());
-        }
+    Preconditions.checkState(!disposed);
+
+    if (owned) {
+      if (Kernel32Ext.INSTANCE.ReleaseMutex(handle)) {
+        owned = false;
+      } else {
+        throw new Win32Exception(Kernel32Ext.INSTANCE.GetLastError());
       }
     }
   }

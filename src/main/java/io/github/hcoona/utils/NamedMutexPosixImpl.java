@@ -71,18 +71,16 @@ class NamedMutexPosixImpl extends NamedMutex {
 
   @Override
   public boolean waitOne() throws Exception {
-    if (disposed) {
-      throw new InvalidObjectException("The current object is not already been disposed.");
+    Preconditions.checkState(!disposed);
+
+    if (Pthread.INSTANCE.sem_wait(handle) == 0) {
+      return true;
     } else {
-      if (Pthread.INSTANCE.sem_wait(handle) == 0) {
-        return true;
+      int errorCode = Native.getLastError();
+      if (errorCode == Errno.EINTR) {
+        throw new InterruptedException(LibCExt.INSTANCE.strerror(errorCode));
       } else {
-        int errorCode = Native.getLastError();
-        if (errorCode == Errno.EINTR) {
-          throw new InterruptedException(LibCExt.INSTANCE.strerror(errorCode));
-        } else {
-          throw new PosixErrorException(Native.getLastError());
-        }
+        throw new PosixErrorException(Native.getLastError());
       }
     }
   }
@@ -90,40 +88,35 @@ class NamedMutexPosixImpl extends NamedMutex {
   @Override
   public boolean waitOne(long interval, TimeUnit intervalTimeUnit) throws Exception {
     Preconditions.checkArgument(interval >= 0);
+    Preconditions.checkState(!disposed);
 
-    if (disposed) {
-      throw new InvalidObjectException("The current object is not already been disposed.");
+    long seconds = intervalTimeUnit.toSeconds(interval);
+    long nanoseconds = intervalTimeUnit.toNanos(interval)
+        - TimeUnit.SECONDS.toNanos(seconds);
+    Pthread.TimeSpecByReference timeout = new Pthread.TimeSpecByReference(seconds, nanoseconds);
+    if (Pthread.INSTANCE.sem_timedwait(handle, timeout) == 0) {
+      return true;
     } else {
-      long seconds = intervalTimeUnit.toSeconds(interval);
-      long nanoseconds = intervalTimeUnit.toNanos(interval)
-          - TimeUnit.SECONDS.toNanos(seconds);
-      Pthread.TimeSpecByReference timeout = new Pthread.TimeSpecByReference(seconds, nanoseconds);
-      if (Pthread.INSTANCE.sem_timedwait(handle, timeout) == 0) {
-        return true;
+      int errorCode = Native.getLastError();
+      if (errorCode == Errno.ETIMEDOUT) {
+        return false;
+      } else if (errorCode == Errno.EINTR) {
+        throw new InterruptedException(LibCExt.INSTANCE.strerror(errorCode));
       } else {
-        int errorCode = Native.getLastError();
-        if (errorCode == Errno.ETIMEDOUT) {
-          return false;
-        } else if (errorCode == Errno.EINTR) {
-          throw new InterruptedException(LibCExt.INSTANCE.strerror(errorCode));
-        } else {
-          throw new PosixErrorException(Native.getLastError());
-        }
+        throw new PosixErrorException(Native.getLastError());
       }
     }
   }
 
   @Override
   public void release() throws Exception {
-    if (disposed) {
-      throw new InvalidObjectException("The current object is not already been disposed.");
-    } else {
-      if (owned) {
-        if (Pthread.INSTANCE.sem_post(handle) == 0) {
-          owned = false;
-        } else {
-          throw new PosixErrorException(Native.getLastError());
-        }
+    Preconditions.checkState(!disposed);
+
+    if (owned) {
+      if (Pthread.INSTANCE.sem_post(handle) == 0) {
+        owned = false;
+      } else {
+        throw new PosixErrorException(Native.getLastError());
       }
     }
   }
