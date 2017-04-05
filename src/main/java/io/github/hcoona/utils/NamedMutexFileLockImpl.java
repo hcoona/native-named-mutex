@@ -25,7 +25,7 @@ public class NamedMutexFileLockImpl extends NamedMutex {
   private final FileChannel lockFileChannel;
   private final ScheduledExecutorService executor;
   private FileLock lock;
-  private final ReentrantLock internal_lock;
+  private final ReentrantLock internalLock;
   private boolean disposed = false;
 
   @VisibleForTesting
@@ -35,24 +35,25 @@ public class NamedMutexFileLockImpl extends NamedMutex {
 
   @VisibleForTesting
   NamedMutexFileLockImpl(boolean initiallyOwned, String name) throws IOException {
-    Path lockFilePath = Paths.get(System.getProperty("java.io.tmpdir"), name + ".lock");
+    final Path lockFilePath = Paths.get(System.getProperty("java.io.tmpdir"), name + ".lock");
+
     this.executor = Executors.newSingleThreadScheduledExecutor();
 
     if (!INTERNAL_LOCK_CACHE.containsKey(name)) {
       INTERNAL_LOCK_CACHE.putIfAbsent(name, new ReentrantLock());
     }
-    this.internal_lock = INTERNAL_LOCK_CACHE.get(name);
+    this.internalLock = INTERNAL_LOCK_CACHE.get(name);
 
     this.lockFileChannel = FileChannel.open(lockFilePath,
         StandardOpenOption.CREATE,
         StandardOpenOption.READ,
         StandardOpenOption.WRITE);
-    if (internal_lock.tryLock()) {
+    if (internalLock.tryLock()) {
       try {
         this.lock = lockFileChannel.tryLock();
       } finally {
         if (lock == null || !lock.isValid()) {
-          internal_lock.unlock();
+          internalLock.unlock();
         }
       }
     }
@@ -62,20 +63,20 @@ public class NamedMutexFileLockImpl extends NamedMutex {
   public boolean waitOne() throws Exception {
     Preconditions.checkState(!disposed);
 
-    internal_lock.lockInterruptibly();
+    internalLock.lockInterruptibly();
     try {
       if (lock == null) {
         lock = lockFileChannel.lock();
       } else if (!lock.isValid()) {
         lock = lockFileChannel.lock();
       } else {
-        internal_lock.unlock();
+        internalLock.unlock();
       }
 
       return true;
     } finally {
       if (lock == null || !lock.isValid()) {
-        internal_lock.unlock();
+        internalLock.unlock();
       }
     }
   }
@@ -85,10 +86,10 @@ public class NamedMutexFileLockImpl extends NamedMutex {
     Preconditions.checkState(!disposed);
     Preconditions.checkArgument(interval >= -1);
 
-    if (internal_lock.tryLock(interval, intervalTimeUnit)) {
+    if (internalLock.tryLock(interval, intervalTimeUnit)) {
       try {
         if (lock != null && lock.isValid()) {
-          internal_lock.unlock();
+          internalLock.unlock();
           return true;
         } else {
           ScheduledFuture<FileLock> lockFuture = executor.schedule(
@@ -105,7 +106,7 @@ public class NamedMutexFileLockImpl extends NamedMutex {
         }
       } finally {
         if (lock == null || !lock.isValid()) {
-          internal_lock.unlock();
+          internalLock.unlock();
         }
       }
     } else {
@@ -117,14 +118,14 @@ public class NamedMutexFileLockImpl extends NamedMutex {
   public void release() throws Exception {
     Preconditions.checkState(!disposed);
 
-    if (internal_lock.tryLock()) {
+    if (internalLock.tryLock()) {
       try {
         if (lock != null && lock.isValid()) {
           lock.release();
-          internal_lock.unlock();
+          internalLock.unlock();
         }
       } finally {
-        internal_lock.unlock();
+        internalLock.unlock();
       }
     }
   }
