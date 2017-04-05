@@ -39,8 +39,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <java.compiler.source>1.8</java.compiler.source>
-    <java.compiler.target>1.8</java.compiler.target>
+    <java.lang.version>1.8</java.lang.version>
 
     <packages.jna.version>4.3.0</packages.jna.version>
   </properties>
@@ -101,8 +100,8 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>${java.compiler.source}</source>
-          <target>${java.compiler.target}</target>
+          <source>${java.lang.version}</source>
+          <target>${java.lang.version}</target>
         </configuration>
       </plugin>
       <plugin>
