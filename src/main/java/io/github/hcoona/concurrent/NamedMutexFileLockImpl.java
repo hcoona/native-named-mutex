@@ -1,6 +1,5 @@
-package io.github.hcoona.utils;
+package io.github.hcoona.concurrent;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 
 import java.io.IOException;
@@ -28,13 +27,11 @@ public class NamedMutexFileLockImpl extends NamedMutex {
   private final ReentrantLock internalLock;
   private boolean disposed = false;
 
-  @VisibleForTesting
-  NamedMutexFileLockImpl(String name) throws IOException {
+  public NamedMutexFileLockImpl(String name) throws IOException {
     this(false, name);
   }
 
-  @VisibleForTesting
-  NamedMutexFileLockImpl(boolean initiallyOwned, String name) throws IOException {
+  public NamedMutexFileLockImpl(boolean initiallyOwned, String name) throws IOException {
     final Path lockFilePath = Paths.get(System.getProperty("java.io.tmpdir"), name + ".lock");
 
     this.executor = Executors.newSingleThreadScheduledExecutor();

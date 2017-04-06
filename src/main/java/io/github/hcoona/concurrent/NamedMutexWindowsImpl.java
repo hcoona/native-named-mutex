@@ -1,4 +1,4 @@
-package io.github.hcoona.utils;
+package io.github.hcoona.concurrent;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;

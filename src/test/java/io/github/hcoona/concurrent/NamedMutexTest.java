@@ -1,4 +1,4 @@
-package io.github.hcoona.utils;
+package io.github.hcoona.concurrent;
 
 import org.junit.Assert;
 import org.junit.Test;

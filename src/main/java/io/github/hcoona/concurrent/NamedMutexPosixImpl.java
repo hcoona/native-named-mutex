@@ -1,4 +1,4 @@
-package io.github.hcoona.utils;
+package io.github.hcoona.concurrent;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
@@ -8,7 +8,6 @@ import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.IntByReference;
 
-import java.io.InvalidObjectException;
 import java.util.concurrent.TimeUnit;
 
 @VisibleForTesting

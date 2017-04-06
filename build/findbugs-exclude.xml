@@ -3,7 +3,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://findbugs.sourceforge.net/filter/3.0.0 https://raw.githubusercontent.com/findbugsproject/findbugs/3.0.1/findbugs/etc/findbugsfilter.xsd">
   <Match>
-    <Class name="io.github.hcoona.utils.Pthread$TimeSpec" />
+    <Class name="io.github.hcoona.concurrent.Pthread$TimeSpec" />
     <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD" />
   </Match>
 </FindBugsFilter>

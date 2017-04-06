@@ -1,4 +1,4 @@
-package io.github.hcoona.utils;
+package io.github.hcoona.concurrent;
 
 public class NamedMutexFileLockImplTest extends NamedMutexTest {
   @Override
