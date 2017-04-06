@@ -6,4 +6,8 @@
     <Class name="io.github.hcoona.concurrent.Pthread$TimeSpec" />
     <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD" />
   </Match>
+  <Match>
+    <Class name="io.github.hcoona.utils.Pthread$TimeSpec" />
+    <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD" />
+  </Match>
 </FindBugsFilter>
