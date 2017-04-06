@@ -17,6 +17,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * A synchronization primitive that can also be used for inter-process synchronization.
+ *
+ * <p>This one is underlying implemented by {@link FileLock} for synchronize between JVM
+ *     and {@link ReentrantLock} for synchronize between Threads &amp; Processes inside JVM.
+ */
 public class NamedMutexFileLockImpl extends NamedMutex {
   private static final ConcurrentHashMap<String, ReentrantLock> INTERNAL_LOCK_CACHE =
       new ConcurrentHashMap<>();
@@ -27,10 +33,31 @@ public class NamedMutexFileLockImpl extends NamedMutex {
   private final ReentrantLock internalLock;
   private boolean disposed = false;
 
+  /**
+   * Calling this constructor overload is the same as calling the
+   * {@link #NamedMutexFileLockImpl(boolean, String)} constructor overload and specifying false for
+   * initial ownership of the mutex. That is, the calling thread does not own the mutex.
+   *
+   * @param name
+   *     the name of the mutex
+   * @throws IOException
+   *     failed to open or create the lock file
+   */
   public NamedMutexFileLockImpl(String name) throws IOException {
     this(false, name);
   }
 
+  /**
+   * This constructor initializes a Mutex object that represents a named system mutex.
+   * You can create multiple Mutex objects that represent the same named system mutex.
+   *
+   * @param initiallyOwned
+   *     indicates whether the calling thread should have initial ownership of the mutex
+   * @param name
+   *     the name of the mutex
+   * @throws IOException
+   *     failed to open or create the lock file
+   */
   public NamedMutexFileLockImpl(boolean initiallyOwned, String name) throws IOException {
     final Path lockFilePath = Paths.get(System.getProperty("java.io.tmpdir"), name + ".lock");
 
