@@ -5,6 +5,8 @@ image:https://maven-badges.herokuapp.com/maven-central/io.github.hcoona/native-n
 
 This is a Java library to provide a cross-platform system-wide named mutex synchronization primitive. It could be used for inter-process synchronization.
 
+**Moved to link:https://github.com/hcoona/one/tree/master/native-named-mutex[https://github.com/hcoona/one/tree/master/native-named-mutex]**
+
 [source,xml]
 -------------------------------------------
 <dependency>
